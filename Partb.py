@@ -9,7 +9,7 @@ p_sensor = [0.9, 0.8, 0.7, 0.6, 0.5]
 
 curr_pos = (0,0)
 
-Bel = np.ones(30,30)*(1/900)
+Bel = np.ones((30,30), dtype = np.float64)*(1/900)
 
 
 def Sensor_model(Obs_E, X):
