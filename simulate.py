@@ -29,23 +29,24 @@ def sense(curr_pos, sensors):
     return sensor_readings
 
 
-N = 25
-curr_pos = None
-POSITIONS = []
-READINGS = []
-for T in range(N):
-    if(curr_pos is None):
-        curr_pos = (np.random.randint(lim[0], lim[1] + 1), np.random.randint(lim[2], lim[3] + 1))
-    else:
-        curr_pos = move(curr_pos)
-    
-    POSITIONS.append(curr_pos)
-    print('moved to {}'.format(curr_pos))
-    
-    readings = sense(curr_pos, sensors)
-    READINGS += [readings]
-    print('readings = {}'.format(readings))
+if __name__ == '__main__':
+    N = 25
+    curr_pos = None
+    POSITIONS = []
+    READINGS = []
+    for T in range(N):
+        if(curr_pos is None):
+            curr_pos = (np.random.randint(lim[0], lim[1] + 1), np.random.randint(lim[2], lim[3] + 1))
+        else:
+            curr_pos = move(curr_pos)
+        
+        POSITIONS.append(curr_pos)
+        print('moved to {}'.format(curr_pos))
+        
+        readings = sense(curr_pos, sensors)
+        READINGS += [readings]
+        print('readings = {}'.format(readings))
 
-print('Final Print')
-print('Positions = {} \nReadings = {}'.format(POSITIONS, READINGS))
+    print('Final Print')
+    print('Positions = {} \nReadings = {}'.format(POSITIONS, READINGS))
     
