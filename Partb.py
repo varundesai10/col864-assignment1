@@ -74,13 +74,17 @@ def Motion_model(curr_pos, next_position):
 
 
 def HMM_filter(Obs_E, Bel):
-    Bel_t_1 = np.zeros(30,30)
+    Bel_t_1 = np.zeros((30,30), dtype = np.float64)
     for i in range(30):
         for j in range(30):
-            Bel_t_1[i,j] += Bel[i, j-1] * Motion_model((i, j-1), (i,j))
-            Bel_t_1[i,j] += Bel[i, j+1] * Motion_model((i, j+1), (i,j))
-            Bel_t_1[i,j] += Bel[i-1, j] * Motion_model((i-1,j), (i,j))
-            Bel_t_1[i,j] += Bel[i+1, j] * Motion_model((i+1, j), (i, j))
+            if(j-1 >= 0):
+                Bel_t_1[i,j] += Bel[i, j-1] * Motion_model((i, j-1), (i,j))
+            if(j + 1 < 30):
+                Bel_t_1[i,j] += Bel[i, j+1] * Motion_model((i, j+1), (i,j))
+            if(i-1 >= 0):
+                Bel_t_1[i,j] += Bel[i-1, j] * Motion_model((i-1,j), (i,j))
+            if(i+1 < 30):
+                Bel_t_1[i,j] += Bel[i+1, j] * Motion_model((i+1, j), (i, j))
     eta = 0
     for i in range(30):
         for j in range(30):
