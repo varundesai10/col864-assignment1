@@ -3,8 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as shapes
 
 sensors = [(8, 15),(15, 15),(22, 15),(15, 22)]
+def d(p1, p2):
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
 
-def plot_likelihood(cur_pos, bel, estimated_position=None, log=True, filename=None, title=None):
+def plot_likelihood(cur_pos, bel, estimated_position=None, log=True, filename=None, title=None, error=True):
     _, ax = plt.subplots()
     bel = bel.copy()
 
@@ -39,6 +41,8 @@ def plot_likelihood(cur_pos, bel, estimated_position=None, log=True, filename=No
     ax.set_yticks(np.arange(-0.5,29.5,1))
     ax.grid(b=True, which='major')
     ax.set_title(title)
+    if(error and estimated_position is not None):
+        ax.set_xlabel(f'Manhattan Distance = {d(cur_pos, estimated_position)}')
     if filename:
         plt.savefig(filename)
         plt.close()

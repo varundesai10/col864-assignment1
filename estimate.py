@@ -9,10 +9,11 @@ import os
 BASE_IMAGE_PATH = os.path.abspath('./plots/')
 PART_B_PATH = os.path.join(BASE_IMAGE_PATH, 'b/')
 PART_C_PATH = os.path.join(BASE_IMAGE_PATH, 'c/')
-
+PART_E_PATH = os.path.join(BASE_IMAGE_PATH, 'd/')
 os.makedirs(BASE_IMAGE_PATH, exist_ok = True)
 os.makedirs(PART_B_PATH, exist_ok = True)
 os.makedirs(PART_C_PATH, exist_ok = True)
+os.makedirs(PART_E_PATH, exist_ok = True)
 
 def d(p1, p2):
     return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
@@ -43,13 +44,18 @@ bel[0] = bel[0]*(1/900)
 print(np.max(bel[0]), np.min(bel[0]))
 plot_likelihood((0,0), bel[0])
 print(bel[0])
+
+avg = 0
+
 for t in range(1, N+1):
     
     bel[t] = HMM_filter(READINGS[t-1], bel[t-1])
     print(bel[t])
     ind = np.unravel_index(np.argmax(bel[t], axis=None), bel[t].shape)
+    avg += d(ind, POSITIONS[t-1])
     plot_likelihood(POSITIONS[t-1], bel[t], estimated_position=ind, filename=os.path.join(PART_B_PATH, f'{t}.png'), title=f't = {t}')
 
+print("Sum of manhattan distances = ", avg)
 #backward loop!
 
 bel_smooth = np.zeros((N, 30, 30), dtype=np.float64)
@@ -77,8 +83,34 @@ while(t>0):
     print(f'bel_smooth {t} = ', bel_smooth[t-1])
     t-=1
 
+avg = 0
 for t in range(1, N+1):
     
     ind = np.unravel_index(np.argmax(bel_smooth[t-1], axis=None), bel_smooth[t-1].shape)
+    avg += d(ind, POSITIONS[t-1])
     plot_likelihood(POSITIONS[t-1], bel_smooth[t-1], estimated_position=ind, filename=os.path.join(PART_C_PATH, f'{t}.png'), title=f't = {t}')      
 
+#into the future!!
+
+bel = bel[N]
+for k in range(25):
+    temp = bel.copy()
+    for i in range(30):
+        for j in range(30):
+
+            if(j-1 >= 0):
+                temp[i,j] += bel[i, j-1] * Motion_model((i, j-1), (i,j))
+            if(j + 1 < 30):
+                temp[i,j] += bel[i, j+1] * Motion_model((i, j+1), (i,j))
+            if(i-1 >= 0):
+                temp[i,j] += bel[i-1, j] * Motion_model((i-1,j), (i,j))
+            if(i+1 < 30):
+                temp[i,j] += bel[i+1, j] * Motion_model((i+1, j), (i, j))
+    bel = temp
+    plot_likelihood(POSITIONS[N-1], bel, filename=os.path.join(PART_E_PATH, f'{k + 1}_future.png'), title=f'{k+1} steps into the future', error=False)
+            
+# most likely path: viterbi algorithm!!
+
+
+    
+print("Sum of manhattan distances = ", avg)
