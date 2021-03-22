@@ -1,7 +1,6 @@
 import numpy as np
 from Partb import Sensor_model, Motion_model
 from simulate import sense, move, lim, sensors
-N = 25
 
 
 
@@ -27,11 +26,18 @@ print('Final Print')
 print('Positions = {} \nReadings = {}'.format(POSITIONS, READINGS))
 
 def viterbi_algorithm(READINGS, N):
-    Path = []
+    ##check for the Path_Tracker
+    Path_tracker_1 = np.empty((30,30), dtype = object)
+    Path_tracker_1.fill([])
+    Path_tracker_2 = np.empty((30,30), dtype = object)
+    Path_tracker_2.fill([])
     Sequence_probs = np.ones((N + 1, 30, 30), dtype=np.float64)
     Sequence_probs[0] = np.ones((30,30), dtype = np.float64)/900
     Seq_prob_wo_obs = np.zeros((N, 30, 30), dtype=np.float64)
     for l in range(1,N+1):
+        Path_tracker_1 = Path_tracker_2
+        print(l)
+        print(len(Path_tracker_1[1,1]))
         for i in range(30):
             for j in range(30):
                 list_of_prob =np.zeros(4, dtype = np.float64)
@@ -55,13 +61,29 @@ def viterbi_algorithm(READINGS, N):
                 ind = np.argmax(list_of_prob)
                 Seq_prob_wo_obs[l-1, i,j] = list_of_prob[ind]
                 if ind == 0:
-                    Path.append((i, j-1))
+                    list_= Path_tracker_1[i,j-1]
+                    list_.append((i,j-1))
+                    Path_tracker_2[i,j] = list_
+##check for the Path_Tracker
                 if ind == 1:
-                    Path.append((i, j+1))
+                    list_ = Path_tracker_1[i, j +1]
+                    list_.append((i, j + 1))
+                    Path_tracker_2[i, j] = list_
+
+
                 if ind == 2:
-                    Path.append((i-1, j))
+                    list_ = Path_tracker_1[i-1, j]
+                    list_.append((i-1, j))
+                    Path_tracker_2[i, j] = list_
+
+
                 if ind == 3:
-                    Path.append((i+1, j))
+
+                    list_ = Path_tracker_1[i+1, j]
+                    list_.append((i+1, j))
+                    Path_tracker_2[i, j] = list_
+
+
         eta = 0
         for i in range(30):
             for j in range(30):
@@ -69,11 +91,6 @@ def viterbi_algorithm(READINGS, N):
                 Sequence_probs[l, i, j] = Seq_prob_wo_obs[l-1, i,j]*ProbE_X
                 eta+= Sequence_probs[l,i,j]
         Sequence_probs[l] = Sequence_probs[l]/eta
-    return Path, Sequence_probs
+    return Path_tracker_1, Path_tracker_2, Sequence_probs
 
-Path, Sequence_probs = viterbi_algorithm(READINGS, N)
-Path1 = np.array(Path)
-Path = []
-for i in range(N+1):
-    Path.append(np.unravel_index(np.argmax(Sequence_probs[i], axis=None), Sequence_probs[N].shape))
-print(Path)
+PATH_T1,PATH_T2,Sequence_probs=viterbi_algorithm(READINGS,N)
