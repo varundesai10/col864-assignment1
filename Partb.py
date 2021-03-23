@@ -9,11 +9,7 @@ p_sensor = [0.9, 0.8, 0.7, 0.6, 0.5]
 
 curr_pos = (0,0)
 
-<<<<<<< HEAD
 Bel = np.ones((30,30), dtype = np.float64)*(1/900)
-=======
-Bel = np.ones((30,30))*(1/900)
->>>>>>> rocktim
 
 
 def Sensor_model(Obs_E, X):
@@ -78,11 +74,7 @@ def Motion_model(curr_pos, next_position):
 
 
 def HMM_filter(Obs_E, Bel):
-<<<<<<< HEAD
     Bel_t_1 = np.zeros((30,30), dtype = np.float64)
-=======
-    Bel_t_1 = np.zeros((30,30))
->>>>>>> rocktim
     for i in range(30):
         for j in range(30):
             if(j-1 >= 0):
