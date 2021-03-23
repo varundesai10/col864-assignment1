@@ -1,5 +1,5 @@
 import numpy as np
-
+from simulate import move, sense
 lim = [0,29,0,29]
 move_probabilies = [0.4, 0.1, 0.2, 0.3] #up, down, left, right
 move_dict = {0:lambda x, y: (x, min(y+1, lim[3])) , 1:lambda x, y: (x, max(y-1, lim[2])), 2:lambda x, y: (max(x-1, lim[0]),y), 3:lambda x, y: (min(x+1, lim[1]), y)}
@@ -9,7 +9,11 @@ p_sensor = [0.9, 0.8, 0.7, 0.6, 0.5]
 
 curr_pos = (0,0)
 
+<<<<<<< HEAD
 Bel = np.ones((30,30), dtype = np.float64)*(1/900)
+=======
+Bel = np.ones((30,30))*(1/900)
+>>>>>>> rocktim
 
 
 def Sensor_model(Obs_E, X):
@@ -74,7 +78,11 @@ def Motion_model(curr_pos, next_position):
 
 
 def HMM_filter(Obs_E, Bel):
+<<<<<<< HEAD
     Bel_t_1 = np.zeros((30,30), dtype = np.float64)
+=======
+    Bel_t_1 = np.zeros((30,30))
+>>>>>>> rocktim
     for i in range(30):
         for j in range(30):
             if(j-1 >= 0):
@@ -93,3 +101,31 @@ def HMM_filter(Obs_E, Bel):
             eta += Bel[i,j]
     Bel = Bel/eta
     return Bel
+
+
+N = 25
+curr_pos = None
+POSITIONS = []
+READINGS = []
+for T in range(N):
+    if (curr_pos is None):
+        curr_pos = (np.random.randint(lim[0], lim[1] + 1), np.random.randint(lim[2], lim[3] + 1))
+    else:
+        curr_pos = move(curr_pos)
+
+    POSITIONS.append(curr_pos)
+
+    readings = sense(curr_pos, sensors)
+    READINGS += [readings]
+
+
+
+
+
+M = 25
+Estimated_Position = []
+for T in range(N):
+    Bel = HMM_filter(READINGS[T], Bel)
+    print(Bel)
+print("Estimated Positions")
+print(Estimated_Position)
