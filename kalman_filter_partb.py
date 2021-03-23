@@ -8,7 +8,7 @@ initial_velocity = np.random.rand(2) * 5  # random velocity, [v_x, v_y]
 initial_state = np.stack([initial_position, initial_velocity]).reshape(-1)
 sigma = (10) ** 2
 T = 200  # number of time steps
-delt = 1.0
+delt = 0.1
 
 R = np.diag([1.0, 1.0, 0.01, 0.01])
 delta = np.eye(2) * sigma
@@ -68,7 +68,7 @@ for t in range(T):
     else:
         mu_t_1 = mu_t
         sig_t_1 = mu_t
-    mu_t, sig_t = Kalman_filter(mu_t_1,sig_t_1,u_t,z_t,1.0)
+    mu_t, sig_t = Kalman_filter(mu_t_1,sig_t_1,u_t,z_t,0.1)
     estimated_positions+= [[mu_t[0], mu_t[1]]]
 print(positions)
 print(estimated_positions)
