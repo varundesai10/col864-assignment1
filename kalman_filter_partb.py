@@ -9,7 +9,6 @@ def simulate(init_position = np.array([10, 10]), init_velocity= np.random.rand(2
     initial_velocity = init_velocity  # random velocity, [v_x, v_y]
 
     initial_state = np.stack([initial_position, initial_velocity]).reshape(-1)
-    sigma = (10) ** 2
     T = T_step  # number of time steps
     delt = delta_time
 
@@ -81,6 +80,12 @@ for t in range(T):
         mu_t_1 = mu_t
         sig_t_1 = mu_t
     mu_t, sig_t = Kalman_filter(mu_t_1,sig_t_1,u_t,z_t,0.1)
-    estimated_positions+= [[mu_t[0], mu_t[1]]]
+    estimated_positions += [[mu_t[0], mu_t[1]]]
 print(positions)
+estimated_positions = np.array(estimated_positions)
 print(estimated_positions)
+
+plt.plot(positions[:, 0], positions[:, 1], 'r')
+plt.show()
+plt.plot(estimated_positions[:, 0], estimated_positions[:, 1], 'b')
+plt.show()
