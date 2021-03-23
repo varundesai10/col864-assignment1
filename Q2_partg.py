@@ -52,7 +52,7 @@ for t in range(T):
         sig_t_1 = sig_0
     else:
         mu_t_1 = mu_t
-        sig_t_1 = mu_t
+        sig_t_1 = sig_t
     mu_t, sig_t = Kalman_filter_partg(mu_t_1,sig_t_1,u_t,z_t,0.1)
     estimated_positions += [[mu_t[0], mu_t[1]]]
 print(positions)
