@@ -84,7 +84,8 @@ if __name__ == '__main__':
     mu_t = initial_state
     sig_t = np.eye(4)
     for t in range(T):
-        z_t = measurements[t].T
+
+        z_t = measurements[t]
         time = t * delta_time
         u_t = np.array([mt.sin(time), mt.cos(time)]).T
         if t == 0:
