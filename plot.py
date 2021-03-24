@@ -49,7 +49,53 @@ def plot_likelihood(cur_pos, bel, estimated_position=None, log=True, filename=No
     else:
         plt.show()
 
+
+def plot_paths(true_path, estimated_path, filename=None, title=None):
+    assert len(true_path) == len(estimated_path)
+    _, ax = plt.subplots(1, 2)
+
     
+    ax[0].set_box_aspect(1)
+    ax[1].set_box_aspect(1)
+    i = 1
+    for pos1, pos2 in zip(true_path, estimated_path):
+        marker1 = shapes.Circle(pos1, radius=0.5, color='red')
+        marker2 = shapes.Circle(pos2, radius=0.5, color='blue')
+        ax[0].add_artist(marker1)
+        ax[0].text(pos1[0], pos1[1], f'{i}')
+        ax[1].add_artist(marker2)
+        ax[1].text(pos2[0], pos2[1], f'{i}')
+        i+=1
+
+    for sens in sensors:
+        x, y = sens
+        marker = shapes.Rectangle((x, y - 0.5), width=0.5*np.sqrt(2), height=0.5*np.sqrt(2), angle=45, color='blue')
+        ax[1].add_artist(marker); 
+
+        marker = shapes.Rectangle((x, y - 0.5), width=0.5*np.sqrt(2), height=0.5*np.sqrt(2), angle=45, color='blue')
+        ax[0].add_artist(marker)
+
+    
+    ax[0].set_xlim(-0.5,29.5)
+    ax[0].set_ylim(-0.5, 29.5)
+    ax[0].set_xticks(np.arange(-0.5,29.5,1))
+    ax[0].set_yticks(np.arange(-0.5,29.5,1))
+    ax[0].grid(b=True, which='major')
+    ax[0].set_title('True Positions')
+    
+    ax[1].set_xlim(-0.5,29.5)
+    ax[1].set_ylim(-0.5, 29.5)
+    ax[1].set_xticks(np.arange(-0.5,29.5,1))
+    ax[1].set_yticks(np.arange(-0.5,29.5,1))
+    ax[1].grid(b=True, which='major')
+    ax[1].set_title('Estimated Positions')
+    
+    if filename:
+        plt.savefig(filename)
+        plt.close()
+    else:
+        plt.show()
+
 
 if __name__ == '__main__':
     bel = np.ones((30,30), dtype=np.float64)

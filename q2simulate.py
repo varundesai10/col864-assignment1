@@ -39,5 +39,5 @@ positions = np.array(positions)
 measurements = np.array(measurements)
 plt.plot(positions[:, 0], positions[:,1], 'r')
 plt.plot(measurements[:,0], measurements[:,1], 'b')
-    
+plt.show()
 
