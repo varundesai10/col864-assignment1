@@ -89,7 +89,7 @@ if __name__ == '__main__':
     estimated_positions = [[mu_0[0], mu_0[1]]]
     mu_t = initial_state
     sig_t = np.eye(4)
-    for t in range(T):
+    for t in range(1, T+1):
 
         z_t = measurements[t]
         time = t * delta_time

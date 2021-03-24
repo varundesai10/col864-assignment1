@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import math as mt
 
 wavelength = 5.0
-var = 1
+var = 100
+motvar = 10000
 def simulate(init_position = np.array([10, 10]), init_velocity= np.random.rand(2) * 5, delta_time= 1.0, control=0,
-             Rt =  np.diag([1.0, 1.0, 0.01, 0.01]), Qt = np.eye(2) * var, T_step = 200):
+             Rt =  np.diag(np.array([1.0, 1.0, 0.01, 0.01])*motvar), Qt = np.eye(2) * var, T_step = 200):
 
     initial_position = init_position
 
@@ -55,7 +56,7 @@ def Kalman_filter(mu_t_1, sig_t_1, u_t, z_t, del_t = 1.0):
     A_t = np.array([[1,0,del_t,0],[0,1,0,del_t],[0 ,0,1,0],[0,0,0,1]], dtype = np.float64)
     B_t = np.array([[0,0],[0,0],[1,0],[0,1]], dtype = np.float64)
     C_t = np.array([[1,0,0,0],[0,1,0,0]], dtype = np.float64)
-    Q_t = np.diag([1.0, 1.0, 0.01, 0.01])
+    Q_t = np.diag([1.0, 1.0, 0.01, 0.01])*motvar
 
     mu_t_dash = np.matmul(A_t,mu_t_1) + np.matmul(B_t, u_t)
     sig_t_dash = np.matmul(A_t, np.matmul(sig_t_1, A_t.T)) + Q_t
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     positions, measurements = simulate( init_position = initial_position, 
                                         init_velocity= initial_velocity, 
                                         delta_time= delta_time, control= 1, 
-                                        Rt =  np.diag([1.0, 1.0, 0.01, 0.01]), 
+                                        Rt =  np.diag([1.0, 1.0, 0.01, 0.01])*motvar, 
                                         Qt = np.eye(2) * var, 
                                         T_step = 200)
 

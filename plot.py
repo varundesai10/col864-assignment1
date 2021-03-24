@@ -57,15 +57,23 @@ def plot_paths(true_path, estimated_path, filename=None, title=None):
     
     ax[0].set_box_aspect(1)
     ax[1].set_box_aspect(1)
-    i = 1
-    for pos1, pos2 in zip(true_path, estimated_path):
-        marker1 = shapes.Circle(pos1, radius=0.5, color='red')
-        marker2 = shapes.Circle(pos2, radius=0.5, color='blue')
-        ax[0].add_artist(marker1)
-        ax[0].text(pos1[0], pos1[1], f'{i}')
-        ax[1].add_artist(marker2)
-        ax[1].text(pos2[0], pos2[1], f'{i}')
-        i+=1
+    i = 0
+    
+    init_pos0 = true_path[i]
+    init_pos1 = estimated_path[i]
+    marker1 = shapes.Circle(init_pos0, radius=0.5, color='red')
+    marker2 = shapes.Circle(init_pos1, radius=0.5, color='blue')
+
+    ax[0].add_artist(marker1)
+    ax[1].add_artist(marker2)
+    for i in range(1, len(estimated_path)):
+        line0 = plt.Line2D((true_path[i-1][0], true_path[i][0]), (true_path[i-1][1], true_path[i][1]))
+        line1 = plt.Line2D((estimated_path[i-1][0], estimated_path[i][0]), (estimated_path[i-1][1], estimated_path[i][1]))
+        
+        ax[0].arrow(true_path[i-1][0], true_path[i-1][1], true_path[i][0]-true_path[i-1][0], true_path[i][1]- true_path[i-1][1], width=0.1, )
+        ax[1].arrow(estimated_path[i-1][0], estimated_path[i-1][1], estimated_path[i][0] - estimated_path[i-1][0], estimated_path[i][1] - estimated_path[i-1][1], width=0.1)
+        #ax[0].add_artist(arrow0)
+        #ax[1].add_artist(arrow1)
 
     for sens in sensors:
         x, y = sens

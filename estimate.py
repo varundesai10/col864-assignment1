@@ -48,6 +48,7 @@ print(np.max(bel[0]), np.min(bel[0]))
 print(bel[0])
 
 avg = 0
+manhattan_distances = []
 
 for t in range(1, N+1):
     
@@ -55,11 +56,14 @@ for t in range(1, N+1):
     print(bel[t])
     ind = np.unravel_index(np.argmax(bel[t], axis=None), bel[t].shape)
     avg += d(ind, POSITIONS[t-1])
+    manhattan_distances.append(d(ind, POSITIONS[t-1]))
     plot_likelihood(POSITIONS[t-1], bel[t], estimated_position=ind, filename=os.path.join(PART_B_PATH, f'{t}.png'), title=f't = {t}')
 
 print("Sum of manhattan distances = ", avg)
 #backward loop!
-
+plt.plot(manhattan_distances)
+plt.title(f"Sum of manhattan distances = {avg}")
+plt.show()
 bel_smooth = np.zeros((N, 30, 30), dtype=np.float64)
 backward = np.ones((30,30), dtype=np.float64) #belief that propogates backward
 
@@ -86,12 +90,17 @@ while(t>0):
     t-=1
 
 avg = 0
+manhattan_distances = []
 for t in range(1, N+1):
     
     ind = np.unravel_index(np.argmax(bel_smooth[t-1], axis=None), bel_smooth[t-1].shape)
     avg += d(ind, POSITIONS[t-1])
+    manhattan_distances.append(d(ind, POSITIONS[t-1]))
     plot_likelihood(POSITIONS[t-1], bel_smooth[t-1], estimated_position=ind, filename=os.path.join(PART_C_PATH, f'{t}.png'), title=f't = {t}')      
 
+plt.plot(manhattan_distances)
+plt.title(f"Sum of manhattan distances = {avg}")
+plt.show()
 #into the future!!
 
 bel = bel[N]
@@ -112,7 +121,6 @@ for k in range(25):
     plot_likelihood(POSITIONS[N-1], bel, filename=os.path.join(PART_E_PATH, f'{k + 1}_future.png'), title=f'{k+1} steps into the future', error=False)
             
     
-print("Sum of manhattan distances = ", avg)
 
 
 def viterbi_algorithm(READINGS, N):
